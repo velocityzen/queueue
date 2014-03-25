@@ -29,7 +29,14 @@ q.push({
 
 ```
 
-### methods
+### Tasks
+* ctx — context to run task in
+* method — method or method name to run
+* args — arguments for task's method, last argument is always callback
+
+**All tasks must run cb when finished**
+
+### Methods
 ####push(task);
 adds task or array of tasks to end of the queue
 
@@ -45,14 +52,7 @@ returns queue length
 ####running();
 returns number of current workers
 
-### tasks
-* ctx — context to run task in
-* method — method or method name to run
-* args — arguments for task's method, last argument is always callback
-
-**All tasks must run cb when finished**
-
-### events
+### Events
 Queueue is event emmitter
 
 ####drain
