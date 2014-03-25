@@ -1,0 +1,17 @@
+{
+	"name": "queueue",
+	"version": "0.1.0",
+	"description": "Queue with concurency and context for tasks",
+	"license" : "MIT",
+	"keywords": ["queue", "task", "concurrency"],
+	"author": "Alexey Novikov (http://2dubs.com)",
+	"private": false,
+	"engines": {
+		"node": "~0.10.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:velocityzen/queueue.git"
+	},
+	"main": "./index"
+}
