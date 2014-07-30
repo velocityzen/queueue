@@ -1,6 +1,6 @@
 {
 	"name": "queueue",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Queue with concurency and context for tasks",
 	"license" : "MIT",
 	"keywords": ["queue", "task", "concurrency"],

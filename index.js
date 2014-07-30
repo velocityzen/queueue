@@ -2,8 +2,8 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
 
-var queueManager = function(q, position, data, cb) {
-	var self = q;
+var queueManager = function(position, data, cb) {
+	var self = this;
 
 	if(!Array.isArray(data)) {
 		data = [data];
@@ -12,6 +12,10 @@ var queueManager = function(q, position, data, cb) {
 	data.forEach(function(data) {
 		if(!data.ctx && self.ctx) {
 			data.ctx = self.ctx;
+		}
+
+		if(!data.method && self.method) {
+			data.method = self.method;
 		}
 
 		var task = {
@@ -49,8 +53,9 @@ var Q = function(concurrency) {
 };
 inherits(Q, EventEmitter);
 
-Q.prototype.bind = function(ctx) {
+Q.prototype.bind = function(ctx, method) {
 	this.ctx = ctx;
+	this.method = method;
 	return this;
 };
 
@@ -91,12 +96,12 @@ Q.prototype.run = function() {
 };
 
 Q.prototype.push = function(data, cb) {
-	queueManager(this, true, data, cb);
+	queueManager.call(this, true, data, cb);
 	return this;
 };
 
 Q.prototype.unshift = function(data, cb) {
-	queueManager(this, false, data, cb);
+	queueManager.call(this, false, data, cb);
 	return this;
 };
 

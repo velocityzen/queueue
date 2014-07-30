@@ -43,8 +43,8 @@ adds task or array of tasks to end of the queue
 ####unshift(task);
 adds task or array of tasks to beginnig of the queue
 
-####bind(ctx);
-bind default ctx for all tasks with no ctx defined
+####bind(ctx, [method]);
+bind default ctx and/or method for all tasks with no ctx and/or method defined
 
 ####length();
 returns queue length
