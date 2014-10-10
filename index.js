@@ -1,4 +1,5 @@
 "use strict";
+var os = require('os');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
 
@@ -46,7 +47,7 @@ var queueManager = function(position, data, cb) {
 var Q = function(concurrency) {
 	EventEmitter.call(this);
 
-	this.concurrency = concurrency || 1;
+	this.concurrency = concurrency === "auto" || concurrency === undefined ? os.cpus().length : concurrency;
 	this.tasks = [];
 	this.progress = [];
 	this.workers = 0;

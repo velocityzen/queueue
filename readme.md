@@ -29,6 +29,11 @@ q.push({
 
 ```
 
+### Constructor
+```js
+    new Q(concurrency) // 'auto' or undefined is equals to cpus number
+```
+
 ### Tasks
 * ctx — context to run task in
 * method — method or method name to run
