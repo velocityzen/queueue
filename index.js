@@ -25,10 +25,8 @@ var queueManager = function(position, data, cb) {
 		};
 
 		if(position) {
-			if(self.tasks.indexOf(task) === -1) {
-				self.tasks.push(task);
-				self.progress.push(data);
-			}
+			self.tasks.push(task);
+			self.progress.push(data);
 		} else {
 			self.tasks.unshift(task);
 			self.progress.unshift(data);
