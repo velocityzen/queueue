@@ -1,7 +1,7 @@
 "use strict";
-var os = require('os');
-var EventEmitter = require('events').EventEmitter;
-var inherits = require('util').inherits;
+var os = require("os");
+var EventEmitter = require("events").EventEmitter;
+var inherits = require("util").inherits;
 
 var queueManager = function(position, data, cb) {
 	var self = this;
@@ -21,7 +21,7 @@ var queueManager = function(position, data, cb) {
 
 		var task = {
 			data: data,
-            cb: typeof cb === 'function' ? cb : null
+            cb: typeof cb === "function" ? cb : null
 		};
 
 		if(position) {
@@ -33,7 +33,7 @@ var queueManager = function(position, data, cb) {
 		}
 
 		if(self.tasks.length === self.concurrency) {
-			self.emit('saturate');
+			self.emit("saturate");
 		}
 
 		process.nextTick(function(){
@@ -65,7 +65,7 @@ Q.prototype.run = function() {
 			data = task.data;
 
 		if (this.tasks.length === 0) {
-			this.emit('empty');
+			this.emit("empty");
 		}
 
 		this.workers++;
@@ -74,13 +74,15 @@ Q.prototype.run = function() {
 			data.args = [];
 		}
 
-		data.args.push(function() {
+		data.args.push(function(err) {
 			self.workers--;
-			task.callback && task.callback.apply(task, arguments);
+			task.cb && task.cb.apply(task, arguments);
 			self.progress.splice(self.progress.indexOf(task.data), 1);
 
+			err && self.emit("error", err);
+
 			if (self.tasks.length + self.workers === 0) {
-				self.emit('drain');
+				self.emit("drain");
 			}
 			self.run();
 		});

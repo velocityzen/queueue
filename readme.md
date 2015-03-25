@@ -39,7 +39,8 @@ q.push({
 * method — method or method name to run
 * args — arguments for task's method, last argument is always callback
 
-**All tasks must run cb when finished**
+**All tasks must run callback when finished**
+
 
 ### Methods
 ####push(task);
@@ -61,15 +62,18 @@ returns number of current workers
 Queueue is event emmitter
 
 ####drain
-emmited when all tasks are done
+emited when all tasks are done
 
 ####empty
-emmited when queue is empty
+emited when queue is empty
 
 ####saturate
-emmited when number of workers is exceeded
+emited when number of workers is exceeded
 
 ####task
-emmited before task will run
+emited before task will run
+
+####error
+emited when task returns error as first argument to callback function
 
 License: MIT
