@@ -3,14 +3,14 @@ var os = require("os");
 var EventEmitter = require("events").EventEmitter;
 var inherits = require("util").inherits;
 
-var queueManager = function(position, data, cb) {
+var queueManager = function(position, tasks, cb) {
 	var self = this;
 
-	if(!Array.isArray(data)) {
-		data = [data];
+	if(!Array.isArray(tasks)) {
+		tasks = [tasks];
 	}
 
-	data.forEach(function(data) {
+	tasks.forEach(function(data) {
 		if(!data.ctx && self.ctx) {
 			data.ctx = self.ctx;
 		}
@@ -96,13 +96,13 @@ Q.prototype.run = function() {
 	}
 };
 
-Q.prototype.push = function(data, cb) {
-	queueManager.call(this, true, data, cb);
+Q.prototype.push = function(tasks, cb) {
+	queueManager.call(this, true, tasks, cb);
 	return this;
 };
 
-Q.prototype.unshift = function(data, cb) {
-	queueManager.call(this, false, data, cb);
+Q.prototype.unshift = function(tasks, cb) {
+	queueManager.call(this, false, tasks, cb);
 	return this;
 };
 
