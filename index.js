@@ -3,6 +3,8 @@ var os = require("os");
 var EventEmitter = require("events").EventEmitter;
 var inherits = require("util").inherits;
 
+var slice = Array.prototype.slice;
+
 var queueManager = function(position, tasks, cb) {
 	var self = this;
 
@@ -76,10 +78,13 @@ Q.prototype.run = function() {
 
 		data.args.push(function(err) {
 			self.workers--;
-			task.cb && task.cb.apply(task, arguments);
 			self.progress.splice(self.progress.indexOf(task.data), 1);
 
 			err && self.emit("error", err);
+
+			var args = slice.call(arguments);
+			args.unshift("done");
+			self.emit.apply(self, args);
 
 			if (self.tasks.length + self.workers === 0) {
 				self.emit("drain");

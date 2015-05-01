@@ -73,6 +73,9 @@ emited when number of workers is exceeded
 ####task
 emited before task will run
 
+####task
+emited when every task is done
+
 ####error
 emited when task returns error as first argument to callback function
 
