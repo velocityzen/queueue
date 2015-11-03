@@ -1,7 +1,7 @@
-#Queueue
+# Queueue
 Queue with concurency and context for tasks
 
-##Instalation
+## Instalation
 `npm install queueue`
 
 ## Usage
@@ -43,40 +43,40 @@ q.push({
 
 
 ### Methods
-####push(task);
+#### push(task);
 adds task or array of tasks to end of the queue
 
-####unshift(task);
+#### unshift(task);
 adds task or array of tasks to beginnig of the queue
 
-####bind(ctx, [method]);
+#### bind(ctx, [method]);
 bind default ctx and/or method for all tasks with no ctx and/or method defined
 
-####length();
+#### length();
 returns queue length
 
-####running();
+#### running();
 returns number of current workers
 
 ### Events
 Queueue is event emmitter
 
-####drain
+#### drain
 emited when all tasks are done
 
-####empty
+#### empty
 emited when queue is empty
 
-####saturate
+#### saturate
 emited when number of workers is exceeded
 
-####task
+#### task
 emited before task will run
 
-####done
+#### done
 emited when task is done
 
-####error
+#### error
 emited when task returns error as first argument to callback function
 
 License: MIT
