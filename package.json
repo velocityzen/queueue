@@ -1,18 +1,25 @@
 {
-  "name": "queueue",
-  "version": "1.0.1",
+  "author": {
+    "name": "Alexey Novikov",
+    "url": "http://2dubs.com"
+  },
+  "bugs": {
+    "url": "https://github.com/velocityzen/queueue/issues"
+  },
   "description": "Queue with concurency and context for tasks",
-  "license": "MIT",
+  "homepage": "https://github.com/velocityzen/queueue#readme",
   "keywords": [
+    "concurrency",
     "queue",
-    "task",
-    "concurrency"
+    "task"
   ],
-  "author": "Alexey Novikov (http://2dubs.com)",
+  "license": "MIT",
+  "main": "./index",
+  "name": "queueue",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git@github.com:velocityzen/queueue.git"
+    "url": "git+ssh://git@github.com/velocityzen/queueue.git"
   },
-  "main": "./index"
+  "version": "1.0.1"
 }
