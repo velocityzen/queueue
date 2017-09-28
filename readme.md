@@ -1,95 +1,84 @@
 # Queueue
+
+[![NPM Version](https://img.shields.io/npm/v/queueue.svg?style=flat-square)](https://www.npmjs.com/package/queueue)
+[![NPM Downloads](https://img.shields.io/npm/dt/queueue.svg?style=flat-square)](https://www.npmjs.com/package/queueue)
+
 Queue with concurency and context for tasks
 
 ## Instalation
 
-`npm install queueue`
+`npm i queueue`
 
 ## Usage
 ```js
-var Q = require("queueue");
+const Q = require("queueue");
 //creating queueue instance with concurrency 4
-var q = new Q(4);
+const q = new Q(4);
 
 //when queue is empty and all tasks done print "Done"
-q.on("drain", function() {
-    console.log("Done");
-});
+q.on("drain", () => console.log("Done"));
 
-var log(task, name, cb) {
-    console.log(task, name);
-    cb();
+const log = function(task, name, cb) {
+  console.log(task, name);
+  cb();
 }
 
 //pushing task and run it
 q.push({
-    ctx: this,
-    method: "log",
-    args: ["some", "task"];
+  ctx: this,
+  method: "log",
+  args: ["some", "task"];
 });
 
 ```
 
-### Constructor
+## Constructor
 ```js
     new Q(concurrency) // 'auto' or undefined is equals to cpus number
 ```
 
-### Tasks
+## Tasks
 * ctx — context to run task in
 * method — method or method name to run
 * args — arguments for task's method, last argument is always callback
 
 **All tasks must run callback when finished**
 
-
-### Methods
-#### push(task);
-
+## Methods
+### push(task)
 adds task or array of tasks to end of the queue
 
-#### unshift(task);
-
+### unshift(task)
 adds task or array of tasks to beginnig of the queue
 
-#### bind(ctx, [method]);
-
+### bind(ctx, [method])
 bind default ctx and/or method for all tasks with no ctx and/or method defined
 
-#### length();
-
+### length()
 returns queue length
 
-#### running();
-
+### running()
 returns number of current workers
 
-### Events
-
+## Events
 Queueue is event emmitter
 
-#### drain
-
+### drain
 emited when all tasks are done
 
-#### empty
-
+### empty
 emited when queue is empty
 
-#### saturate
-
+### saturate
 emited when number of workers is exceeded
 
-#### task
-
+### task
 emited before task will run
 
-#### done
-
+### done
 emited when task is done
 
-#### error
-
+### error
 emited when task returns error as first argument to callback function
 
 License: MIT

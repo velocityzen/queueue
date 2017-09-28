@@ -1,55 +1,46 @@
 'use strict';
-let os = require('os');
-let EventEmitter = require('events').EventEmitter;
-let inherits = require('util').inherits;
+const os = require('os');
+const EventEmitter = require('events').EventEmitter;
+const inherits = require('util').inherits;
 
-let slice = Array.prototype.slice;
-
-let queueManager = function(position, tasks, cb) {
-  let self = this;
-
+const queueManager = function(position, tasks, cb) {
   if (!Array.isArray(tasks)) {
     tasks = [ tasks ];
   }
 
-  tasks.forEach(function(data) {
-    if (!data.ctx && self.ctx) {
-      data.ctx = self.ctx;
+  tasks.forEach(data => {
+    if (!data.ctx && this.ctx) {
+      data.ctx = this.ctx;
     }
 
-    if (!data.method && self.method) {
-      data.method = self.method;
+    if (!data.method && this.method) {
+      data.method = this.method;
     }
 
-    let task = {
+    const task = {
       data: data,
       cb: typeof cb === 'function' ? cb : null
     };
 
     if (position) {
-      self.tasks.push(task);
-      self.progress.push(data);
+      this.tasks.push(task);
     } else {
-      self.tasks.unshift(task);
-      self.progress.unshift(data);
+      this.tasks.unshift(task);
     }
 
-    if (self.tasks.length === self.concurrency) {
-      self.emit('saturate');
+    if (this.tasks.length === this.concurrency) {
+      this.emit('saturate');
     }
 
-    process.nextTick(function() {
-      self.run();
-    });
+    process.nextTick(() => this.run());
   });
 };
 
-let Q = function(concurrency) {
+const Q = function(concurrency) {
   EventEmitter.call(this);
 
   this.concurrency = concurrency === 'auto' || concurrency === undefined ? os.cpus().length : concurrency;
   this.tasks = [];
-  this.progress = [];
   this.workers = 0;
 };
 inherits(Q, EventEmitter);
@@ -61,43 +52,45 @@ Q.prototype.bind = function(ctx, method) {
 };
 
 Q.prototype.run = function() {
-  if (this.workers < this.concurrency && this.tasks.length) {
-    let self = this;
-    let task = this.tasks.shift();
-    let data = task.data;
+  if (!(this.tasks.length && this.workers < this.concurrency)) {
+    return;
+  }
 
-    if (this.tasks.length === 0) {
-      this.emit('empty');
+  const task = this.tasks.shift();
+  const data = task.data;
+
+  if (this.tasks.length === 0) {
+    this.emit('empty');
+  }
+
+  this.workers++;
+
+  if (!data.args) {
+    data.args = [];
+  }
+
+  data.args.push( (...args) => {
+    this.workers--;
+
+    if (args[0]) {
+      this.emit('error', args[0]);
     }
 
-    this.workers++;
+    args.unshift('done');
+    this.emit.apply(this, args);
 
-    if (!data.args) {
-      data.args = [];
+    if (this.tasks.length + this.workers === 0) {
+      this.emit('drain');
     }
 
-    data.args.push(function(err) {
-      self.workers--;
-      self.progress.splice(self.progress.indexOf(task.data), 1);
+    this.run();
+  });
 
-      err && self.emit('error', err);
-
-      let args = slice.call(arguments);
-      args.unshift('done');
-      self.emit.apply(self, args);
-
-      if (self.tasks.length + self.workers === 0) {
-        self.emit('drain');
-      }
-      self.run();
-    });
-
-    this.emit('task', data);
-    if (typeof data.method === 'string') {
-      data.ctx[data.method].apply(data.ctx, data.args);
-    } else {
-      data.method.apply(data.ctx, data.args);
-    }
+  this.emit('task', data);
+  if (typeof data.method === 'string') {
+    data.ctx[data.method].apply(data.ctx, data.args);
+  } else {
+    data.method.apply(data.ctx, data.args);
   }
 };
 
