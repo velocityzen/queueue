@@ -3,24 +3,19 @@ const os = require('os');
 const EventEmitter = require('events').EventEmitter;
 const inherits = require('util').inherits;
 
-const queueManager = function(position, tasks, cb) {
+const queueManager = function(position, tasks) {
   if (!Array.isArray(tasks)) {
     tasks = [ tasks ];
   }
 
-  tasks.forEach(data => {
-    if (!data.ctx && this.ctx) {
-      data.ctx = this.ctx;
+  tasks.forEach(task => {
+    if (!task.ctx && this.ctx) {
+      task.ctx = this.ctx;
     }
 
-    if (!data.method && this.method) {
-      data.method = this.method;
+    if (!task.method && this.method) {
+      task.method = this.method;
     }
-
-    const task = {
-      data: data,
-      cb: typeof cb === 'function' ? cb : null
-    };
 
     if (position) {
       this.tasks.push(task);
@@ -57,7 +52,6 @@ Q.prototype.run = function() {
   }
 
   const task = this.tasks.shift();
-  const data = task.data;
 
   if (this.tasks.length === 0) {
     this.emit('empty');
@@ -65,42 +59,45 @@ Q.prototype.run = function() {
 
   this.workers++;
 
-  if (!data.args) {
-    data.args = [];
+  if (!task.args) {
+    task.args = [];
   }
 
-  data.args.push( (...args) => {
-    this.workers--;
-
-    if (args[0]) {
-      this.emit('error', args[0]);
-    }
-
-    args.unshift('done');
-    this.emit.apply(this, args);
-
-    if (this.tasks.length + this.workers === 0) {
-      this.emit('drain');
-    }
-
-    this.run();
-  });
-
-  this.emit('task', data);
-  if (typeof data.method === 'string') {
-    data.ctx[data.method].apply(data.ctx, data.args);
-  } else {
-    data.method.apply(data.ctx, data.args);
+  task.args.push((...args) => this.didRun(...args));
+  this.emit('task', task);
+  const call = typeof task.method === 'string' ? task.ctx[task.method] : task.method;
+  const promise = call.apply(task.ctx, task.args);
+  if (promise) {
+    promise
+      .then((...args) => this.didRun(null, ...args))
+      .catch(err => this.didRun(err));
   }
 };
 
-Q.prototype.push = function(tasks, cb) {
-  queueManager.call(this, true, tasks, cb);
+Q.prototype.didRun = function(err, ...args) {
+  this.workers--;
+
+  if (err) {
+    this.emit('error', err);
+  }
+
+  args.unshift('done');
+  this.emit.apply(this, args);
+
+  if (this.tasks.length + this.workers === 0) {
+    this.emit('drain');
+  }
+
+  this.run();
+};
+
+Q.prototype.push = function(tasks) {
+  queueManager.call(this, true, tasks);
   return this;
 };
 
-Q.prototype.unshift = function(tasks, cb) {
-  queueManager.call(this, false, tasks, cb);
+Q.prototype.unshift = function(tasks) {
+  queueManager.call(this, false, tasks);
   return this;
 };
 

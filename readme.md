@@ -20,7 +20,7 @@ q.on("drain", () => console.log("Done"));
 
 const log = function(task, name, cb) {
   console.log(task, name);
-  cb();
+  cb(); // or you can return a Promise
 }
 
 //pushing task and run it
@@ -42,7 +42,7 @@ q.push({
 * method — method or method name to run
 * args — arguments for task's method, last argument is always callback
 
-**All tasks must run callback when finished**
+**All tasks must return a Promise or run a callback when finished**
 
 ## Methods
 ### push(task)
