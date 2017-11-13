@@ -58,15 +58,11 @@ Q.prototype.run = function() {
   }
 
   this.workers++;
-
-  if (!task.args) {
-    task.args = [];
-  }
-
-  task.args.push((...args) => this.didRun(...args));
+  const args = task.args ? task.args.slice() : [];
+  args.push((...args) => this.didRun(...args));
   this.emit('task', task);
   const call = typeof task.method === 'string' ? task.ctx[task.method] : task.method;
-  const promise = call.apply(task.ctx, task.args);
+  const promise = call.apply(task.ctx, args);
   if (promise) {
     promise
       .then((...args) => this.didRun(null, ...args))
