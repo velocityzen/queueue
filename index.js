@@ -65,7 +65,7 @@ Q.prototype.run = function() {
   const promise = call.apply(task.ctx, args);
   if (promise) {
     promise
-      .then((...args) => this.didRun(null, ...args))
+      .then(res => this.didRun(null, res))
       .catch(err => this.didRun(err));
   }
 };
