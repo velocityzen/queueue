@@ -70,11 +70,11 @@ Q.prototype.run = function() {
   }
 };
 
-Q.prototype.didRun = function(err, ...args) {
+Q.prototype.didRun = function(...args) {
   this.workers--;
 
-  if (err) {
-    this.emit('error', err);
+  if (args[0]) {
+    this.emit('error', args[0]);
   }
 
   args.unshift('done');
