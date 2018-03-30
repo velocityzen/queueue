@@ -38,10 +38,7 @@ test.cb('checks done event gets the results from usual async task', t => {
   t.plan(3);
   const q = new Q(1)
     .on('drain', () => t.end())
-    .on('done', (err, a, b) => {
-      if (err) {
-        t.fail();
-      }
+    .on('done', (a, b) => {
       t.is(a, 'a');
       t.is(b, 'b');
     });
@@ -59,12 +56,8 @@ test.cb('checks done event gets the results from promised task', t => {
   t.plan(2);
   const q = new Q(1)
     .on('drain', () => t.end())
-    .on('done', (err, test) => {
-      if (err) {
-        t.fail();
-      }
-      t.is(test, 'test');
-    });
+    .on('done', test => t.is(test, 'test'))
+    .on('error', () => t.fail())
 
   q.push({
     method: data => new Promise(resolve => {
