@@ -34,7 +34,7 @@ q.push({
 
 ## Constructor
 ```js
-    new Q(concurrency) // 'auto' or undefined is equals to cpus number
+new Q(concurrency); // 'auto' or undefined is equals to cpus number
 ```
 
 ## Tasks

@@ -70,15 +70,15 @@ Q.prototype.run = function() {
   }
 };
 
-Q.prototype.didRun = function(...args) {
+Q.prototype.didRun = function(err, ...args) {
   this.workers--;
 
-  if (args[0]) {
-    this.emit('error', args[0]);
+  if (err) {
+    this.emit('error', err);
+  } else {
+    args.unshift('done');
+    this.emit.apply(this, args);
   }
-
-  args.unshift('done');
-  this.emit.apply(this, args);
 
   if (this.tasks.length + this.workers === 0) {
     this.emit('drain');
