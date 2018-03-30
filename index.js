@@ -105,5 +105,9 @@ Q.prototype.running = function() {
   return this.workers;
 };
 
+Q.prototype.abort = function() {
+  this.tasks = [];
+};
+
 
 module.exports = Q;

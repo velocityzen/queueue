@@ -54,6 +54,9 @@ adds task or array of tasks to beginnig of the queue
 ### bind(ctx, [method])
 bind default ctx and/or method for all tasks with no ctx and/or method defined
 
+### abort()
+cleans up the task queue, and will stop after all current tasks will be finished
+
 ### length()
 returns queue length
 

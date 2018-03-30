@@ -239,3 +239,26 @@ test.cb('checks the concurency', t => {
       { args: [ 3 ] }
     ]);
 });
+
+test.cb('aborts the queueue after first result', t => {
+  t.plan(1);
+
+  const q = new Q(2)
+    .on('error', () => q.abort())
+    .on('drain', () => t.end());
+
+  const obj = {
+    get: function(num, cb) {
+      t.pass();
+      cb(new Error());
+    }
+  }
+
+  q
+    .bind(obj, 'get')
+    .push([
+      { args: [ 1 ] },
+      { args: [ 2 ] },
+      { args: [ 3 ] }
+    ]);
+});
