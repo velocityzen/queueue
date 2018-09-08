@@ -21,7 +21,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/velocityzen/queueue.git"
   },
-  "version": "1.2.5",
+  "version": "1.2.6",
   "devDependencies": {
     "ava": "^0.25.0",
     "nyc": "^11.3.0"
