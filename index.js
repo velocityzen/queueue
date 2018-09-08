@@ -85,6 +85,7 @@ Q.prototype.didRun = function(err, ...args) {
   }
 
   this.run();
+  return null;
 };
 
 Q.prototype.push = function(tasks) {
