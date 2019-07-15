@@ -23,8 +23,8 @@
   },
   "version": "1.2.6",
   "devDependencies": {
-    "ava": "^0.25.0",
-    "nyc": "^13.0.0"
+    "ava": "^2.0.0",
+    "nyc": "^14.0.0"
   },
   "scripts": {
     "test": "nyc ava"
