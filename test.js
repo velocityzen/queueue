@@ -262,3 +262,32 @@ test.cb('aborts the queueue after first result', t => {
       { args: [ 3 ] }
     ]);
 });
+
+test.cb('catches th error', t => {
+  t.plan(4);
+
+  const q = new Q(2)
+    .on('error', e => {
+      t.is(e.message, 'Error!');
+    })
+    .on('drain', () => t.end());
+
+  function task(num, cb) {
+    t.pass();
+
+    if (!num) {
+      throw new Error('Error!');
+    }
+
+    cb();
+  }
+
+  q
+    .bind(null, task)
+    .push([
+      { args: [ 1 ] },
+      { args: [ 0 ] },
+      { args: [ 2 ] }
+    ]);
+});
+

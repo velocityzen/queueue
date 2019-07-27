@@ -62,11 +62,15 @@ Q.prototype.run = function() {
   args.push((...args) => this.didRun(...args));
   this.emit('task', task);
   const call = typeof task.method === 'string' ? task.ctx[task.method] : task.method;
-  const promise = call.apply(task.ctx, args);
-  if (promise) {
-    promise
-      .then(res => this.didRun(null, res))
-      .catch(err => this.didRun(err));
+  try {
+    const promise = call.apply(task.ctx, args);
+    if (promise) {
+      promise
+        .then(res => this.didRun(null, res))
+        .catch(err => this.didRun(err));
+    }
+  } catch (err) {
+    this.didRun(err);
   }
 };
 
